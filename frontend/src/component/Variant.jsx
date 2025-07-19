@@ -222,7 +222,8 @@ const Variant = ({ show, handleClose }) => {
                                 onChange={handleChange}
                             />
                         </Form.Group>
-                        <Form.Group controlId="createdDate" className="mt-3">
+                        Enter Value separated by comma
+                        {/* <Form.Group controlId="createdDate" className="mt-3">
                             <Form.Label>
                                 Created Date <span className="text-danger">*</span>
                             </Form.Label>
@@ -232,7 +233,7 @@ const Variant = ({ show, handleClose }) => {
                                 value={formData.createdDate}
                                 onChange={handleChange}
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group
                             controlId="status"
                             className="mt-4 d-flex align-items-center justify-content-between"
@@ -284,7 +285,7 @@ const Variant = ({ show, handleClose }) => {
                                 onChange={handleEditChange}
                             />
                         </Form.Group>
-                        <Form.Group controlId="editCreatedDate" className="mt-3">
+                        {/* <Form.Group controlId="editCreatedDate" className="mt-3">
                             <Form.Label>
                                 Created Date <span className="text-danger">*</span>
                             </Form.Label>
@@ -294,7 +295,7 @@ const Variant = ({ show, handleClose }) => {
                                 value={editFormData.createdDate}
                                 onChange={handleEditChange}
                             />
-                        </Form.Group>
+                        </Form.Group> */}
                         <Form.Group
                             controlId="editStatus"
                             className="mt-4 d-flex align-items-center justify-content-between"
