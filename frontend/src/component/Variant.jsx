@@ -221,7 +221,7 @@ const Variant = ({ show, handleClose }) => {
                                 value={formData.value}
                                 onChange={handleChange}
                             />
-                        </Form.Group>
+                        </Form.Group> 
                         Enter Value separated by comma
                         {/* <Form.Group controlId="createdDate" className="mt-3">
                             <Form.Label>
