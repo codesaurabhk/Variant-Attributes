@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const WarrantySchema = new mongoose.Schema({
     variant: {
         type: String,
-        // required: true,
+        required: true,
     },
     value: {
         type: String,
-        // required: true,
+        required: true,
     },
 
     status: {
