@@ -45,6 +45,7 @@ const Variant = ({ show, handleClose }) => {
                 ...item,
                 id: item._id,
             }));
+            console.log("Fetched Data:", updatedData);
             setVariantData(updatedData);
         } catch (err) {
             console.error("Error fetching variants:", err);
@@ -116,10 +117,10 @@ const Variant = ({ show, handleClose }) => {
     };
 
     const handleEditChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
         setEditFormData((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: type === "checkbox" ? checked : value,
         }));
     };
 
@@ -315,17 +316,7 @@ const Variant = ({ show, handleClose }) => {
                             />
                         </Form.Group>
                         Enter Value separated by comma
-                        {/* <Form.Group controlId="createdDate" className="mt-3">
-                            <Form.Label>
-                                Created Date <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                                type="date"
-                                name="createdDate"
-                                value={formData.createdDate}
-                                onChange={handleChange}
-                            />
-                        </Form.Group> */}
+
                         <Form.Group
                             controlId="status"
                             className="mt-4 d-flex align-items-center justify-content-between"
@@ -377,17 +368,7 @@ const Variant = ({ show, handleClose }) => {
                                 onChange={handleEditChange}
                             />
                         </Form.Group>
-                        {/* <Form.Group controlId="editCreatedDate" className="mt-3">
-                            <Form.Label>
-                                Created Date <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                                type="date"
-                                name="createdDate"
-                                value={editFormData.createdDate}
-                                onChange={handleEditChange}
-                            />
-                        </Form.Group> */}
+
                         <Form.Group
                             controlId="editStatus"
                             className="mt-4 d-flex align-items-center justify-content-between"
@@ -482,7 +463,7 @@ const Variant = ({ show, handleClose }) => {
                                         </th>
                                         <td>{item.variant}</td>
                                         <td>{item.value}</td>
-                                        <td>{dayjs(item.createdDate).format("DD MMM YYYY")}</td>
+                                        <td>{dayjs(item.createdAt).format("DD MMM YYYY")}</td>
                                         <td>
                                             <span className={`badge ${item.status ? "badge-success" : "badge-danger"}`}>
                                                 {item.status ? "Active" : "Inactive"}
