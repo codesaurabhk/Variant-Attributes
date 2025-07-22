@@ -264,7 +264,7 @@ const Variant = ({ show, handleClose }) => {
                     >
                         <AiOutlineFileExcel size={24} />
                     </Button>
-                    {/* CHANGE: Fixed refresh button to call fetchGiftData correctly */}
+
                     <Button
                         variant="light"
                         aria-label="Refresh"
@@ -433,7 +433,7 @@ const Variant = ({ show, handleClose }) => {
                             aria-label="Default select example"
                             onChange={(e) => setStatusFilter(e.target.value)}
                         >
-                            <option value="all">Status</option>
+                            <option value="all">All Status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
