@@ -1,12 +1,22 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import { IoEyeOutline } from "react-icons/io5";
+import { BiSolidFilePdf } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
+import { HiOutlineRefresh } from "react-icons/hi";
+import { IoIosArrowUp } from "react-icons/io";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { LuCirclePlus } from "react-icons/lu";
 import { Modal, Form, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { IoSettingsSharp } from "react-icons/io5";
+import Button from "react-bootstrap/Button";
+import html2canvas from "html2canvas";
+import { AiOutlineFileExcel } from "react-icons/ai";
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
+
+
 
 import dayjs from "dayjs";
 import "./Variant.css";
@@ -170,6 +180,54 @@ const Variant = ({ show, handleClose }) => {
     }, [variantData, searchTerm, statusFilter]);
 
 
+    const handleExportPDF = () => {
+        const table = tableRef.current;
+        if (!table) {
+            console.error("Table reference not found");
+            return;
+        }
+
+        html2canvas(table, { scale: 2 }).then((canvas) => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF("p", "mm", "a4");
+            const imgWidth = 190;
+            const pageHeight = 295;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 10;
+
+            pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+                pdf.addPage();
+                position = 0;
+                pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save("variants.pdf");
+        }).catch((error) => {
+            console.error("Error generating PDF:", error);
+            setError("Failed to generate PDF. Please try again.");
+        });
+    };
+
+    const handleExportExcel = () => {
+        const exportData = filteredVariants.map((item) => ({
+            Variant: item.variant,
+            Values: item.value,
+            "Created Date": dayjs(item.createdDate).format("DD MMM YYYY"),
+            Status: item.status ? "Active" : "Inactive",
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Variants");
+        XLSX.writeFile(workbook, "variants.xlsx");
+    };
+
+
     const openDeleteModal = (id) => {
         setPendingDeleteId(id);
         setShowDeleteModal(true);
@@ -177,6 +235,7 @@ const Variant = ({ show, handleClose }) => {
 
     const handleCloses = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
+
 
     return (
         <div className="fn-conatiner">
@@ -186,7 +245,40 @@ const Variant = ({ show, handleClose }) => {
                     <div className="h4">Variant Attributes</div>
                     <div className="text-secondary">Manage your variant attributes</div>
                 </div>
+
                 <div className="d-flex align-items-center gap-1 p-4 mt-0">
+                    <Button
+                        className="text-danger"
+                        variant="light"
+                        aria-label="Export as PDF"
+                        onClick={handleExportPDF}
+                    >
+                        <BiSolidFilePdf size={24} />
+                    </Button>
+                    <Button
+                        className="text-success"
+                        variant="light"
+                        aria-label="Export as Excel"
+                        onClick={handleExportExcel}
+                    >
+                        <AiOutlineFileExcel size={24} />
+                    </Button>
+                    {/* CHANGE: Fixed refresh button to call fetchGiftData correctly */}
+                    <Button
+                        variant="light"
+                        aria-label="Refresh"
+                        className="text-secondary"
+                        onClick={fetchVariants}
+                    >
+                        <HiOutlineRefresh size={20} />
+                    </Button>
+                    <Button
+                        variant="light"
+                        aria-label="Collapse"
+                        className="text-secondary"
+                    >
+                        <IoIosArrowUp size={18} />
+                    </Button>
                     <button className="btn btn-warning text-white" onClick={handleShow}>
                         <LuCirclePlus /> Add Variant
                     </button>
@@ -221,7 +313,7 @@ const Variant = ({ show, handleClose }) => {
                                 value={formData.value}
                                 onChange={handleChange}
                             />
-                        </Form.Group>  
+                        </Form.Group>
                         Enter Value separated by comma
                         {/* <Form.Group controlId="createdDate" className="mt-3">
                             <Form.Label>
